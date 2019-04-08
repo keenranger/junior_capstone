@@ -17,7 +17,6 @@ int command_parsing(String command, int command_nums[]);
 //  기울기 모터는 0.036도의 배수로 입력시켜주세요          //
 ////////////////////////////////////////////////////////
 
-
 // initialize the stepper
 Stepper motor1(steps_per_rev, 8, 9, 10, 11);//TODO 핀번호 알맞게
 Stepper motor2(steps_per_rev, 8, 9, 10, 11);//TODO 핀번호 알맞게
@@ -143,6 +142,10 @@ int command_parsing(String command, int command_nums[]){
       return 0;
     }
     break;
+    
+    default:
+    Serial.println("ERROR:Enter X,Y,R or T")
+    return 0;
   }
   
  return 1; 
