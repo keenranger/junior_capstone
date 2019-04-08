@@ -1,5 +1,5 @@
 #include <Stepper.h>
-
+#include <math.h>
 const int steps_per_rev = 200; //1스텝당 1.8도 회전 step/rev
 const int delay_const = 200; //1스텝당 딜레이 시간
 const int xy_motor = 1000; //한바퀴 돌때 1000um 이동 um/rev
@@ -75,76 +75,76 @@ int command_parsing(String command, int command_nums[]){
     negative_flag = 1;
     break;
     case 'n':
-    negative_flag = -1
-    break
+    negative_flag = -1;
+    break;
     default:
-    Serial.println("ERROR:Enter P or N")
+    Serial.println("ERROR:Enter P or N");
     return 0;
   }
   
   switch(command1){
     case 'x': //x방향 이동
-    if(command3%xy_step==0.0){
+    if(fmodf(command3, xy_step)==0.0){
       command_nums[0] = 1;
       command_nums[1] = (int)(negative_flag * command3 / xy_step);
       Serial.print("Moving to X-Direction ");
-      Serial.print(negative_flag * command3 / xy_step;);
+      Serial.print(negative_flag * command3 / xy_step);
       Serial.println(" step(s)");
     }
     else{
-      Serial.print("ERROR:Number can`t be divided into ")
-      Serial.println(xy_step)
+      Serial.print("ERROR:Number can`t be divided into ");
+      Serial.println(xy_step);
       return 0;
     }
     break;
 
     case 'y': //y방향 이동
-    if(command3%xy_step==0.0){
+    if(fmodf(command3, xy_step)==0.0){
       command_nums[0] = 2;
       command_nums[1] = (int)(negative_flag * command3 / xy_step);
       Serial.print("Moving to Y-Direction ");
-      Serial.print(negative_flag * command3 / xy_step;);
+      Serial.print(negative_flag * command3 / xy_step);
       Serial.println(" step(s)");
     }
     else{
-      Serial.print("ERROR:Number can`t be divided into ")
-      Serial.println(xy_step)
+      Serial.print("ERROR:Number can`t be divided into ");
+      Serial.println(xy_step);
       return 0;
     }
     break;
     
     case 'r': //회전
-    if(command3%rotate_step==0.0){
+    if(fmodf(command3, rotate_step)==0.0){
       command_nums[0] = 3;
       command_nums[1] = (int)(negative_flag * command3 / rotate_step);
       Serial.print("Rotating ");
-      Serial.print(negative_flag * command3 / rotate_step;);
+      Serial.print(negative_flag * command3 / rotate_step);
       Serial.println(" step(s)");
     }
     else{
-      Serial.print("ERROR:Number can`t be divided into ")
-      Serial.println(rotate_step)
+      Serial.print("ERROR:Number can`t be divided into ");
+      Serial.println(rotate_step);
       return 0;
     }
     break;
     
     case 't': //기울이기
-    if(command3%tilting_step==0.0){
+    if(fmodf(command3, tilting_step)==0.0){
       command_nums[0] = 4;
       command_nums[1] = (int)(negative_flag * command3 / tilting_step);
       Serial.print("Tilting ");
-      Serial.print(negative_flag * command3 / tilting_step;);
+      Serial.print(negative_flag * command3 / tilting_step);
       Serial.println(" step(s)");
     }
     else{
-      Serial.print("ERROR:Number can`t be divided into ")
-      Serial.println(tilting_step)
+      Serial.print("ERROR:Number can`t be divided into ");
+      Serial.println(tilting_step);
       return 0;
     }
     break;
     
     default:
-    Serial.println("ERROR:Enter X,Y,R or T")
+    Serial.println("ERROR:Enter X,Y,R or T");
     return 0;
   }
   
