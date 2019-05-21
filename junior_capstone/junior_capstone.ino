@@ -22,7 +22,7 @@ Stepper motor1(steps_per_rev, 8, 9, 10, 11);//TODO 핀번호 알맞게
 Stepper motor2(steps_per_rev, 8, 9, 10, 11);//TODO 핀번호 알맞게
 Stepper motor3(steps_per_rev, 8, 9, 10, 11);//TODO 핀번호 알맞게
 Stepper motor4(steps_per_rev, 8, 9, 10, 11);//TODO 핀번호 알맞게
-
+Stepper motor5(steps_per_rev, 8, 9, 10, 11);//TODO 핀번호 알맞게
 
 void setup() {
   // initialize the serial port:
@@ -36,7 +36,7 @@ void loop() {
   if(Serial.available() > 0) //시리얼이 연결된다면
 /////////////////////////////////////////////////////////////////////  
     command = Serial.readStringUntil('\n'); 
-    if(command_parsing(command, command_nums)){
+    if(command_parsing(command, command_nums)==1){
       switch(command_nums[0]){
         case 1: motor1.step(command_nums[1]);
                 break;
@@ -45,7 +45,9 @@ void loop() {
         case 3: motor3.step(command_nums[1]);
                 break;
         case 4: motor4.step(command_nums[1]);
-                break;          
+                break;
+        case 5: break;
+        case 6: break;
       }
     }
 //    delay(command_nums[1] * 100); //step 마다 0.1초 대기
