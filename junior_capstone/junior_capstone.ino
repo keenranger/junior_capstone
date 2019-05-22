@@ -90,6 +90,7 @@ int command_parsing(String command, int command_nums[]) {
       status_flag = check_dividable(4, command2, command_nums);
       break;
     case 'h':
+      Serial.println("Moving to home position");
       return 2;
 
     default:
