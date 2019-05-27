@@ -2,11 +2,14 @@
 #include <math.h>
 const int steps_per_rev = 200; //모터 자체는 1스텝당 1.8도 회전 step/rev
 const int delay_const = 200; //1스텝당 딜레이 시간
-const double step_index[5] = {5, 5, 0.15, 0.036, 0.15}; //xy는 1스텝에 5미리, 회전은 1스텝에 0.15도, 틸팅은 1스텝에 0.036도
+const double step_index[5] = {5, 5, 90, 0.036, 0.15}; //xy는 1스텝에 5미리, 회전은 1스텝에 0.15도, 틸팅은 1스텝에 0.036도
+int steps[2] = {0, 0);
+
 int i;
 
 int command_parsing(String command, int command_nums[]);
 int check_dividable(int stepper_index, double divided_num, int command_nums[]);
+void rotate(int cw_flag);
 ////////////////////////////////////////////////////////
 //  회전 시킬 떄 xy모터는 5um의 배수                     //
 //  회전모터는 0.15도의 배수                            //
@@ -28,12 +31,11 @@ int flag = 0;
 void loop() {
   int command_nums[2];//숫자로 된 명령어
   int command_code = 0;
-  int motor_change[3] = {0, 0, 0};
   String command;
   if (!flag) {
     flag = 1;
     Serial.println("\n////////////////////");
-    Serial.println("Please enter command");//명령어를 입력해주세요    
+    Serial.println("Please enter command");//명령어를 입력해주세요
     Serial.println("////////////////////");
   }
   if (Serial.available() > 0) { //시리얼이 연결된다면
@@ -42,25 +44,29 @@ void loop() {
     command_code = command_parsing(command, command_nums);
 
     if (command_code == 1 ) { //모터회전
-      steppers[command_nums[0]].step(command_nums[1]);
-      if (command_nums[0] < 3)
-        motor_change[command_nums[0]] -= command_nums[1];
-      else if (command_nums[0] == 4) {
-        steppers[command_nums[0] - 2].step(-command_nums[1]); //steppers[2]=4번이랑 역방향으로 도는 모터 회전
+      if (command_nums[0] == 2) { //회전후 보정이라면
+        rotate(command_nums[1]);
+      }
+      else {//x,y이동, 틸트, 제자리회전이라면
+        steppers[command_nums[0]].step(command_nums[1]);//해당 모터 회전
+        if (command_nums[0] < 2) {//x,y는 이동한만큼 기록해야함
+          steps[command_nums[0]] += command_nums[1];
+        }
+        else if (command_nums[0] == 4) {
+          steppers[command_nums[0] - 2].step(-command_nums[1]); //steppers[2]=4번이랑 역방향으로 도는 모터 회전
+        }
       }
     }
-    //////////////////////////////////////////////////////////
-    else if (command_code == 2) {//원래대로 움직이게 하는 부분
-      for (i = 0; i < 3; i++) {
-        steppers[i].step(motor_change[i]);
-        motor_change[i] = 0;
-        delay(2000);
-      }
+    else if (command_code == 2) {//시작위치 보정
+      steps[0] = 0;
+      steps[1] = 0;
     }
-    /////////////////////////////////////////////////////////
+
   }
-  ///////////////////////////////////////////////////////////
-  delay(100);
+  //////////////////////////////////////////////////////////
+}
+///////////////////////////////////////////////////////////
+delay(100);
 }
 
 /////////////////////////////////////////////////////////////
@@ -89,12 +95,12 @@ int command_parsing(String command, int command_nums[]) {
     case 'z': //엇갈려 회전
       status_flag = check_dividable(4, command2, command_nums);
       break;
-    case 'h':
-      Serial.println("Moving to home position");
+    case 'i':
+      Serial.println("This point is 0,0");
       return 2;
 
     default:
-      Serial.println("ERROR:Enter X,Y,R,T,Z, OR H");
+      Serial.println("ERROR:Enter X,Y,R,T,Z, OR I");
       return 0;
   }
   return status_flag;
