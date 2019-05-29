@@ -3,7 +3,7 @@
 const int steps_per_rev = 200; //모터 자체는 1스텝당 1.8도 회전 step/rev
 const int delay_const = 200; //1스텝당 딜레이 시간
 const double step_index[5] = {5, 5, 90, 0.036, 0.15}; //xy는 1스텝에 5미리, 회전은 1스텝에 0.15도, 틸팅은 1스텝에 0.036도
-int steps[2] = {0, 0);
+int steps[2] = {0, 0};
 
 int i;
 
@@ -56,6 +56,10 @@ void loop() {
           steppers[command_nums[0] - 2].step(-command_nums[1]); //steppers[2]=4번이랑 역방향으로 도는 모터 회전
         }
       }
+      Serial.print("X: ");
+      Serial.print(steps[0]);
+      Serial.print(", Y: ");
+      Serial.println(steps[1]);
     }
     else if (command_code == 2) {//시작위치 보정
       steps[0] = 0;
@@ -64,9 +68,8 @@ void loop() {
 
   }
   //////////////////////////////////////////////////////////
-}
-///////////////////////////////////////////////////////////
-delay(100);
+  ///////////////////////////////////////////////////////////
+  delay(100);
 }
 
 /////////////////////////////////////////////////////////////
