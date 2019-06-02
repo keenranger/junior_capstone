@@ -26,6 +26,11 @@ Stepper steppers[] = {stepper1, stepper2, stepper3, stepper4, stepper5};
 
 void setup() {
   Serial.begin(9600);
+  stepper1.setspeed(30);
+  stepper2.setspeed(30);
+  stepper3.setspeed(30);
+  stepper4.setspeed(30);
+  stepper5.setspeed(30);
 }
 int flag = 0;
 void loop() {
@@ -55,6 +60,7 @@ void loop() {
         else if (command_nums[0] == 4) {
           steppers[command_nums[0] - 2].step(-command_nums[1]); //steppers[2]=4번이랑 역방향으로 도는 모터 회전
         }
+        delay(200 * comman_nums[1]);
       }
       Serial.print("X: ");
       Serial.print(steps[0]);
