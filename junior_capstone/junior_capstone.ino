@@ -33,7 +33,6 @@ void setup() {
 }
 int flag = 0;
 void loop() {
-  int command_nums[2];//숫자로 된 명령어
   int command_code = 0;
   String command;
   if (!flag) {
